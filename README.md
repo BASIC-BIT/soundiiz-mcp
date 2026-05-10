@@ -1,10 +1,10 @@
 # Soundiiz MCP
 
-Give your AI assistant safe, local-first access to your [Soundiiz](https://soundiiz.com) account.
+An MCP server for [Soundiiz](https://soundiiz.com). Lets your AI assistant inspect your sync jobs and SmartLinks across streaming services, and — when you opt in — trigger or delete them.
 
-Soundiiz MCP is a [Model Context Protocol](https://modelcontextprotocol.io/) server for tools like Claude Desktop, OpenCode, and other MCP clients. It helps an assistant answer practical questions about your music sync jobs and SmartLinks across streaming services, and (optionally) trigger or clean them up on your behalf.
+Built for [Claude Desktop](https://claude.ai/download), [OpenCode](https://opencode.ai/), and any other [Model Context Protocol](https://modelcontextprotocol.io/) client.
 
-It is read-only by default, keeps your API key local, and exposes curated high-signal tools on top of the Soundiiz User API instead of forcing agents to reason through paginated endpoints.
+Read-only by default. Your API key stays on your machine. Curated tools on top of the Soundiiz User API so agents don't have to paginate through raw endpoints.
 
 This project is unofficial and is not affiliated with Soundiiz.
 
@@ -18,15 +18,19 @@ This project is unofficial and is not affiliated with Soundiiz.
 - Show details for SmartLink "abc123": fallback URL, per-platform links, status.
 - Delete this stale draft SmartLink (after writes are explicitly enabled and confirmed).
 
-## Safety Model
+## Writes and confirmations
 
-- Read-only by default. The Soundiiz API exposes destructive operations (delete sync, delete smartlink) and a triggerable action (run sync now) — none of these are callable until you opt in.
-- Write tools require `writes.allow = true` or `SOUNDIIZ_MCP_ALLOW_WRITES=true`.
-- Destructive writes (DELETE) require a confirmation token by default (`writes.confirmDestructive = true`). The first call returns a `confirmId`; re-call with the same args plus `confirmId` to execute.
-- Per-resource allowlists: `syncs.allowlist` and `smartlinks.allowlist` can restrict write operations to specific Soundiiz IDs.
-- Your API key never leaves your machine. Storage is in-memory, on-disk file, or OS keychain.
-- Logs go to stderr so stdout stays reserved for MCP protocol messages.
-- Live smoke checks and LLM evals are opt-in and use local fixture files.
+The Soundiiz API exposes three write operations: delete sync, delete smartlink, and trigger sync. None are callable by default.
+
+- Set `writes.allow = true` or `SOUNDIIZ_MCP_ALLOW_WRITES=true` to enable writes.
+- Destructive writes (DELETE) and `soundiiz_sync_trigger` return a `confirmId` on the first call. Re-call with the same args plus `confirmId` to execute. Disable via `writes.confirmDestructive = false` if you trust the caller.
+- Restrict writes to specific IDs with `syncs.allowlist` and `smartlinks.allowlist`.
+
+## Auth and storage
+
+Your API key is read from `SOUNDIIZ_API_KEY`, a local file, or the OS keychain (via `keytar`). It never leaves your machine except in `Authorization: Bearer` headers to `api.soundiiz.com`.
+
+Logs go to stderr so stdout stays reserved for MCP protocol messages. Live smoke checks and LLM evals are opt-in and read gitignored fixture files.
 
 ## Quick Start
 
@@ -129,7 +133,7 @@ Soundiiz MCP exposes three layers (mirroring the vrchat-mcp pattern):
 
 - **Curated tools** for common agent workflows: `soundiiz_me`, `soundiiz_syncs_list`, `soundiiz_syncs_overview`, `soundiiz_syncs_due`, `soundiiz_sync_get`, `soundiiz_smartlinks_list`, `soundiiz_smartlinks_overview`, `soundiiz_smartlink_get`, plus opt-in writes `soundiiz_sync_trigger`, `soundiiz_sync_delete`, `soundiiz_smartlink_delete`.
 - **Auto-generated read tools** named `soundiiz_read_<operationId>` for GET operations from the Soundiiz OpenAPI spec.
-- **Auto-generated write tools** named `soundiiz_write_<operationId>` for non-GET operations. These remain gated by the write safety configuration.
+- **Auto-generated write tools** named `soundiiz_write_<operationId>` for non-GET operations. These remain gated by `writes.allow`.
 
 Local-only tools include:
 
