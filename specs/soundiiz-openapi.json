@@ -1,0 +1,1351 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Soundiiz User API (BETA)",
+    "description": "The Soundiiz User API provides useful endpoints to manage your personal Soundiiz account.<br/> You can generate your personal Soundiiz API Key directly in your user settings here: <a href='https://soundiiz.com/webapp/settings/api' target='_blank'>Get my API Key</a>.<br/> <b>This API is in a preview status. Be aware that content may change.</b>",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.soundiiz.com",
+      "description": "API over HTTPS"
+    }
+  ],
+  "paths": {
+    "/v1/me": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Get detailed profile information about the current user.",
+        "operationId": "get_soundiiz_openapi_v1_merest_getme",
+        "responses": {
+          "200": {
+            "description": "Detailed profile information about the current user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "id",
+                        "email",
+                        "username"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 123
+                        },
+                        "email": {
+                          "type": "string",
+                          "format": "email",
+                          "example": "user@example.com"
+                        },
+                        "username": {
+                          "type": "string",
+                          "example": "john_doe"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/syncs": {
+      "get": {
+        "tags": [
+          "Syncs"
+        ],
+        "description": "Retrieves a paginated list of syncs owned by the authenticated user. This endpoint supports pagination via offset and limit query parameters to control the number of items returned.",
+        "operationId": "get_soundiiz_openapi_v1_merest_getmesyncs",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.",
+            "required": false,
+            "allowEmptyValue": true,
+            "schema": {
+              "type": "string",
+              "default": 0,
+              "pattern": "\\d+"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of items to return. Default: 50. Minimum: 1. Maximum: 100.",
+            "required": false,
+            "allowEmptyValue": true,
+            "schema": {
+              "type": "string",
+              "default": "50",
+              "pattern": "\\d+"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a paginated list of syncs owned by the authenticated user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "items",
+                        "offset",
+                        "limit",
+                        "total"
+                      ],
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "required": [
+                              "id",
+                              "type",
+                              "title",
+                              "source",
+                              "destination",
+                              "method",
+                              "frequency",
+                              "scheduled",
+                              "status"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 42
+                              },
+                              "type": {
+                                "type": "string",
+                                "example": "sync"
+                              },
+                              "title": {
+                                "type": "string",
+                                "example": "My daily sync"
+                              },
+                              "source": {
+                                "required": [
+                                  "type",
+                                  "serviceName",
+                                  "id",
+                                  "url"
+                                ],
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "example": "playlist"
+                                  },
+                                  "serviceName": {
+                                    "type": "string",
+                                    "example": "spotify"
+                                  },
+                                  "id": {
+                                    "type": "string",
+                                    "example": "37i9dQZF1AXcBWIGoYBM5M"
+                                  },
+                                  "url": {
+                                    "type": "string",
+                                    "example": "https://open.spotify.com/playlist/37i9dQZF1AXcBWIGoYBM5M"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "destination": {
+                                "required": [
+                                  "type",
+                                  "serviceName",
+                                  "id",
+                                  "url"
+                                ],
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "example": "playlist"
+                                  },
+                                  "serviceName": {
+                                    "type": "string",
+                                    "example": "deezer"
+                                  },
+                                  "id": {
+                                    "type": "string",
+                                    "example": "1234567890"
+                                  },
+                                  "url": {
+                                    "type": "string",
+                                    "example": "https://www.deezer.com/playlist/1234567890"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "method": {
+                                "type": "string",
+                                "enum": [
+                                  "add",
+                                  "replace"
+                                ],
+                                "example": "add"
+                              },
+                              "frequency": {
+                                "type": "string",
+                                "enum": [
+                                  "daily",
+                                  "weekly",
+                                  "monthly"
+                                ],
+                                "example": "daily"
+                              },
+                              "lastExecutionDate": {
+                                "type": "integer",
+                                "example": 1710673200,
+                                "nullable": true
+                              },
+                              "nextExecutionDate": {
+                                "type": "integer",
+                                "example": 1710759600,
+                                "nullable": true
+                              },
+                              "scheduled": {
+                                "type": "boolean",
+                                "example": true
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "processing",
+                                  "pending",
+                                  "idle"
+                                ],
+                                "example": "idle"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "offset": {
+                          "type": "integer",
+                          "example": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "example": 50
+                        },
+                        "total": {
+                          "type": "integer",
+                          "example": 12
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/syncs/{id}": {
+      "get": {
+        "tags": [
+          "Syncs"
+        ],
+        "description": "Retrieves details of a sync owned by the authenticated user identified by its Soundiiz ID.",
+        "operationId": "get_soundiiz_openapi_v1_merest_getmesyncsdetails",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique Soundiiz identifier of the synchronization process.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "pattern": "\\d+"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns details of a sync owned by the authenticated user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "id",
+                        "type",
+                        "title",
+                        "source",
+                        "destination",
+                        "method",
+                        "frequency",
+                        "scheduled",
+                        "status"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 42
+                        },
+                        "type": {
+                          "type": "string",
+                          "example": "sync"
+                        },
+                        "title": {
+                          "type": "string",
+                          "example": "My daily sync"
+                        },
+                        "source": {
+                          "required": [
+                            "type",
+                            "serviceName",
+                            "id",
+                            "url"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "playlist"
+                            },
+                            "serviceName": {
+                              "type": "string",
+                              "example": "spotify"
+                            },
+                            "id": {
+                              "type": "string",
+                              "example": "37i9dQZF1DXcBWIGoYBM5M"
+                            },
+                            "url": {
+                              "type": "string",
+                              "example": "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "destination": {
+                          "required": [
+                            "type",
+                            "serviceName",
+                            "id",
+                            "url"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "playlist"
+                            },
+                            "serviceName": {
+                              "type": "string",
+                              "example": "deezer"
+                            },
+                            "id": {
+                              "type": "string",
+                              "example": "1234567890"
+                            },
+                            "url": {
+                              "type": "string",
+                              "example": "https://www.deezer.com/playlist/1234567890"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "method": {
+                          "type": "string",
+                          "enum": [
+                            "add",
+                            "replace"
+                          ],
+                          "example": "replace"
+                        },
+                        "frequency": {
+                          "type": "string",
+                          "enum": [
+                            "daily",
+                            "weekly",
+                            "monthly"
+                          ],
+                          "example": "weekly"
+                        },
+                        "lastExecutionDate": {
+                          "type": "integer",
+                          "example": 1710673200,
+                          "nullable": true
+                        },
+                        "nextExecutionDate": {
+                          "type": "integer",
+                          "example": 1710759600,
+                          "nullable": true
+                        },
+                        "scheduled": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "processing",
+                            "pending",
+                            "idle"
+                          ],
+                          "example": "processing"
+                        },
+                        "lastExecutionResult": {
+                          "properties": {
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "pending",
+                                "processing",
+                                "success",
+                                "error"
+                              ],
+                              "example": "success"
+                            },
+                            "error": {
+                              "nullable": true,
+                              "oneOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "PLATFORM_DISCONNECTED",
+                                    "LOADING_SOURCE_PLAYLIST",
+                                    "LOADING_DESTINATION_PLAYLIST",
+                                    "PROCESS_FAILURE",
+                                    "DESTINATION_FULL"
+                                  ]
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "startDate": {
+                              "type": "integer",
+                              "example": 1710673200,
+                              "nullable": true
+                            },
+                            "endDate": {
+                              "type": "integer",
+                              "example": 1710673260,
+                              "nullable": true
+                            },
+                            "score": {
+                              "nullable": true,
+                              "oneOf": [
+                                {
+                                  "type": "integer",
+                                  "example": 98
+                                },
+                                {
+                                  "type": "string",
+                                  "example": "NO_CHANGES"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "nbTrackSource": {
+                              "type": "integer",
+                              "example": 120,
+                              "nullable": true
+                            },
+                            "nbTrackDestination": {
+                              "type": "integer",
+                              "example": 118,
+                              "nullable": true
+                            }
+                          },
+                          "type": "object",
+                          "nullable": true
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sync not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "SYNC_NOT_FOUND"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Syncs"
+        ],
+        "description": "Delete a user-owned synchronization identified by its Soundiiz ID. This endpoint delete the sync and returns a confirmation or failure status.",
+        "operationId": "delete_soundiiz_openapi_v1_merest_getmesyncsdelete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique Soundiiz identifier of the synchronization process to delete. This ID is required and must be a valid integer.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "pattern": "\\d+"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ressource has been deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "accepted"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "SYNC_DELETED"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The resource has not been deleted due to invalid input or missing parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "UNKNOWN_ERROR"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No resource was not found for the provided Soundiiz ID. Verify that the sync ID exists and is accessible by the current user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "SYNC_NOT_FOUND"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The ressource cannot be deleted because it is currently in use.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "enum": [
+                            "SYNC_PROCESSING",
+                            "SYNC_PENDING"
+                          ],
+                          "example": "SYNC_PENDING"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/syncs/{id}/trigger": {
+      "post": {
+        "tags": [
+          "Syncs"
+        ],
+        "description": "Triggers the execution of a user-owned synchronization process identified by its Soundiiz ID. This endpoint initiates the sync and returns a confirmation or processing status.",
+        "operationId": "post_soundiiz_openapi_v1_merest_getmesyncsexecute",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique Soundiiz identifier of the synchronization process to execute. This ID is required and must be a valid integer.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "pattern": "\\d+"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The sync execution request has been received, but the sync is already being processed or in pending mode.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "enum": [
+                            "SYNC_PROCESSING",
+                            "SYNC_PENDING"
+                          ],
+                          "example": "SYNC_PROCESSING"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "The sync execution request has been accepted and is currently being processed asynchronously.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "accepted"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "SYNC_EXECUTION_ACCEPTED"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The sync execution request failed due to invalid input or missing parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "UNKNOWN_ERROR"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No synchronization process was found for the provided Soundiiz ID. Verify that the sync ID exists and is accessible by the current user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "SYNC_NOT_FOUND"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The sync execution request could not be accepted because the user already has too many syncs currently running, or another sync targeting the same destination platform is already in progress.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "enum": [
+                            "TOO_MANY_SYNCS_IN_PROGRESS"
+                          ],
+                          "example": "TOO_MANY_SYNCS_IN_PROGRESS"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/smartlinks": {
+      "get": {
+        "tags": [
+          "Smartlinks"
+        ],
+        "description": "Retrieves a paginated list of smartlinks owned by the authenticated user. This endpoint supports pagination via offset and limit query parameters to control the number of items returned.",
+        "operationId": "get_soundiiz_openapi_v1_merest_getmesmartlinks",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.",
+            "required": false,
+            "allowEmptyValue": true,
+            "schema": {
+              "type": "string",
+              "default": 0,
+              "pattern": "\\d+"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of items to return. Default: 50. Minimum: 1. Maximum: 100.",
+            "required": false,
+            "allowEmptyValue": true,
+            "schema": {
+              "type": "string",
+              "default": "50",
+              "pattern": "\\d+"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a paginated list of smartlinks owned by the authenticated user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "items",
+                        "offset",
+                        "limit",
+                        "total"
+                      ],
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "required": [
+                              "id",
+                              "type",
+                              "shortcode",
+                              "category",
+                              "fallback",
+                              "title",
+                              "artist",
+                              "description",
+                              "addedDate",
+                              "updatedDate",
+                              "links",
+                              "status"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 101
+                              },
+                              "type": {
+                                "type": "string",
+                                "example": "smartlink"
+                              },
+                              "subDomain": {
+                                "type": "string",
+                                "example": "mybrand",
+                                "nullable": true
+                              },
+                              "shortcode": {
+                                "type": "string",
+                                "example": "abc123"
+                              },
+                              "category": {
+                                "type": "string",
+                                "enum": [
+                                  "playlist",
+                                  "album",
+                                  "track",
+                                  "artist"
+                                ],
+                                "example": "playlist"
+                              },
+                              "fallback": {
+                                "type": "string",
+                                "example": "https://open.spotify.com/playlist/xyz"
+                              },
+                              "title": {
+                                "type": "string",
+                                "example": "My Top Playlist"
+                              },
+                              "artist": {
+                                "type": "string",
+                                "example": "Me, the Curator"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "Smart link description",
+                                "nullable": true
+                              },
+                              "addedDate": {
+                                "type": "integer",
+                                "example": 1710673200
+                              },
+                              "updatedDate": {
+                                "type": "integer",
+                                "example": 1710759600
+                              },
+                              "links": {
+                                "type": "array",
+                                "items": {
+                                  "required": [
+                                    "id",
+                                    "type",
+                                    "platform",
+                                    "url"
+                                  ],
+                                  "properties": {
+                                    "id": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "example": "link"
+                                    },
+                                    "platform": {
+                                      "type": "string",
+                                      "example": "spotify"
+                                    },
+                                    "url": {
+                                      "type": "string",
+                                      "example": "https://open.spotify.com/playlist/xyz"
+                                    }
+                                  },
+                                  "type": "object"
+                                }
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "draft",
+                                  "published"
+                                ],
+                                "example": "published"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "offset": {
+                          "type": "integer",
+                          "example": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "example": 50
+                        },
+                        "total": {
+                          "type": "integer",
+                          "example": 7
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/smartlinks/{id}": {
+      "get": {
+        "tags": [
+          "Smartlinks"
+        ],
+        "description": "Retrieves details of a smartlink owned by the authenticated user identified by its Soundiiz ID.",
+        "operationId": "get_soundiiz_openapi_v1_merest_getmesmartlinksdetails",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique Soundiiz identifier of the smartlink.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "pattern": "\\d+"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns details of a smartlink owned by the authenticated user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "id",
+                        "type",
+                        "shortcode",
+                        "category",
+                        "fallback",
+                        "title",
+                        "artist",
+                        "description",
+                        "addedDate",
+                        "updatedDate",
+                        "links",
+                        "status"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 101
+                        },
+                        "type": {
+                          "type": "string",
+                          "example": "smartlink"
+                        },
+                        "subDomain": {
+                          "type": "string",
+                          "example": "mybrand",
+                          "nullable": true
+                        },
+                        "shortcode": {
+                          "type": "string",
+                          "example": "abc123"
+                        },
+                        "category": {
+                          "type": "string",
+                          "enum": [
+                            "playlist",
+                            "album",
+                            "track",
+                            "artist"
+                          ],
+                          "example": "playlist"
+                        },
+                        "fallback": {
+                          "type": "string",
+                          "example": "https://open.spotify.com/playlist/xyz"
+                        },
+                        "title": {
+                          "type": "string",
+                          "example": "My Top Playlist"
+                        },
+                        "artist": {
+                          "type": "string",
+                          "example": "Me, the Curator"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Smart link description",
+                          "nullable": true
+                        },
+                        "addedDate": {
+                          "type": "integer",
+                          "example": 1710673200
+                        },
+                        "updatedDate": {
+                          "type": "integer",
+                          "example": 1710759600
+                        },
+                        "links": {
+                          "type": "array",
+                          "items": {
+                            "required": [
+                              "id",
+                              "type",
+                              "platform",
+                              "url"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "type": {
+                                "type": "string",
+                                "example": "link"
+                              },
+                              "platform": {
+                                "type": "string",
+                                "example": "spotify"
+                              },
+                              "url": {
+                                "type": "string",
+                                "example": "https://open.spotify.com/playlist/xyz"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "draft",
+                            "published"
+                          ],
+                          "example": "published"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Smartlink not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "SMARTLINK_NOT_FOUND"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Smartlinks"
+        ],
+        "description": "Delete a user-owned smartlink identified by its Soundiiz ID. This endpoint delete the smartlink and returns a confirmation or failure status.",
+        "operationId": "delete_soundiiz_openapi_v1_merest_getmesmartlinksdelete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The unique Soundiiz identifier of the smartlink to delete. This ID is required and must be a valid integer.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "pattern": "\\d+"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ressource has been deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "accepted"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "SMARTLINK_DELETED"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Smartlink not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "SMARTLINK_NOT_FOUND"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "description": "Paste here your personal API Key.",
+        "name": "authorization",
+        "in": "header",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "User"
+    },
+    {
+      "name": "Syncs",
+      "description": "Syncs"
+    },
+    {
+      "name": "Smartlinks",
+      "description": "Smartlinks"
+    }
+  ]
+}

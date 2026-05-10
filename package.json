@@ -1,0 +1,86 @@
+{
+  "name": "soundiiz-mcp",
+  "version": "0.1.0",
+  "description": "Local-first MCP server for safe AI access to Soundiiz syncs and SmartLinks. Read-only by default with confirmation-gated writes.",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "bin": {
+    "soundiiz-mcp": "dist/bin/cli.js"
+  },
+  "files": [
+    "dist",
+    "specs/soundiiz-openapi.json",
+    "docs/architecture.md",
+    "docs/curated-tools.md",
+    "docs/design-notes.md",
+    "docs/evals.md",
+    "docs/tools-guide.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "dev": "tsx src/index.ts",
+    "lint": "eslint . --ext .ts,.tsx,.mts --max-warnings=0",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "smoke:live": "tsx scripts/live-smoke.ts",
+    "check": "npm run lint && npm run typecheck && npm test",
+    "mcp:status": "tsx scripts/mcp-client.ts status",
+    "mcp:list-tools": "tsx scripts/mcp-client.ts list-tools",
+    "mcp:call": "tsx scripts/mcp-client.ts call",
+    "sync:spec": "tsx scripts/sync-spec.ts",
+    "generate:tools-docs": "tsx scripts/generate-tools-docs.ts",
+    "mcpo": "uvx mcpo --port 8000 --api-key \"top-secret\" -- npx tsx src/index.ts",
+    "start": "node dist/bin/cli.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "soundiiz",
+    "mcp",
+    "modelcontextprotocol",
+    "model-context-protocol",
+    "claude",
+    "opencode",
+    "music",
+    "playlist",
+    "smartlinks",
+    "sync"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BASIC-BIT/soundiiz-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/BASIC-BIT/soundiiz-mcp/issues"
+  },
+  "homepage": "https://github.com/BASIC-BIT/soundiiz-mcp#readme",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@types/node": "^22.10.5",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "keytar": "^7.9.0",
+    "undici": "^7.2.0",
+    "zod": "^3.24.1"
+  }
+}

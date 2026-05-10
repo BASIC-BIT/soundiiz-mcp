@@ -1,0 +1,45 @@
+{
+  "api": {
+    "baseUrl": "https://api.soundiiz.com",
+    "userAgent": "soundiiz-mcp/{version} (+https://github.com/BASIC-BIT/soundiiz-mcp)",
+    "timeoutMs": 15000
+  },
+  "auth": {
+    "keyStore": "env",
+    "keyFile": "~/.soundiiz-mcp-key"
+  },
+  "writes": {
+    "allow": false,
+    "confirmDestructive": true,
+    "confirmTtlMs": 120000
+  },
+  "syncs": {
+    "allowlist": []
+  },
+  "smartlinks": {
+    "allowlist": []
+  },
+  "rateLimit": {
+    "perMinute": 60
+  },
+  "cache": {
+    "enabled": true,
+    "ttls": {
+      "me": 3600,
+      "syncsList": 60,
+      "syncDetail": 30,
+      "smartlinksList": 300,
+      "smartlinkDetail": 300
+    }
+  },
+  "rawTools": {
+    "enabled": false
+  },
+  "generatedTools": {
+    "read": true,
+    "write": true
+  },
+  "logging": {
+    "level": "info"
+  }
+}
