@@ -7,7 +7,7 @@ import { toolError, toolJson } from '../utils/toolResponses.js';
 export function registerRawTools(server: McpServer): void {
   server.tool(
     'soundiiz_call',
-    'Call any Soundiiz operation by operationId. Disabled by default; enable with rawTools.enabled=true. Write operations remain gated by writes.allow.',
+    'Call any Soundiiz operation by operationId. Off by default; enable with rawTools.enabled=true.',
     {
       operationId: z.string(),
       params: z.record(z.string(), z.unknown()).optional(),

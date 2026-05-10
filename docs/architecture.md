@@ -12,7 +12,7 @@ This server is organized by responsibility so each file stays small and focused.
 - `client.ts` executes API operations against `https://api.soundiiz.com` with Bearer auth, the configured user-agent, write gating, allowlist enforcement, and a token-bucket rate limiter.
 - `readTools.ts` provides read helpers (pagination unrolling, field selection, shaping into compact rows).
 - `readToolRegistry.ts` registers auto-generated GET tools (`soundiiz_read_<operationId>`) from the spec.
-- `writeToolRegistry.ts` registers auto-generated non-GET tools (`soundiiz_write_<operationId>`) from the spec, all gated by `writes.allow` and (for DELETE) the confirmation-token flow.
+- `writeToolRegistry.ts` registers auto-generated non-GET tools (`soundiiz_write_<operationId>`) from the spec. They honor `writes.allow` (an explicit kill switch) and the curated DELETE/trigger tools layer the confirmation-token flow on top.
 
 ## Tool registration (`src/tools/`)
 

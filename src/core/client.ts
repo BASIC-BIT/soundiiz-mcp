@@ -140,7 +140,7 @@ function enforcePolicy(op: OperationDef, options?: CallOptions): void {
   if (options?.internalOverrideWriteGate) return;
   if (!getConfig().writes.allow) {
     throw new CallError(
-      `Write operations are disabled (blocked ${op.method}). Enable writes in config (writes.allow=true) or set SOUNDIIZ_MCP_ALLOW_WRITES=true.`
+      `Write operations are disabled (blocked ${op.method}). Set writes.allow=true (default) or unset SOUNDIIZ_MCP_ALLOW_WRITES=false to re-enable.`
     );
   }
 }

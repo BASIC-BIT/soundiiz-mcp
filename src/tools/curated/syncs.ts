@@ -183,7 +183,7 @@ export function registerCuratedSyncTools(server: McpServer): void {
 function registerSyncWriteTools(server: McpServer): void {
   server.tool(
     'soundiiz_sync_trigger',
-    'Trigger execution of a Soundiiz sync. Requires writes.allow=true. By default a confirmation token is required (call once to receive a confirmId, then re-call with it).',
+    'Trigger execution of a Soundiiz sync. Returns a confirmId on the first call; re-call with the same args plus that confirmId to execute (skip via writes.confirmDestructive=false).',
     {
       id: z.number().int().positive(),
       confirmId: z.string().optional(),
@@ -191,9 +191,7 @@ function registerSyncWriteTools(server: McpServer): void {
     async (args) => {
       const config = getConfig();
       if (!config.writes.allow) {
-        return toolError(
-          'Writes are disabled. Set writes.allow=true or SOUNDIIZ_MCP_ALLOW_WRITES=true to enable.'
-        );
+        return toolError('Writes are disabled in config (writes.allow=false).');
       }
       const allowed = checkSyncAllowed(args.id);
       if (!allowed.ok) return toolError(allowed.reason!);
@@ -233,7 +231,7 @@ function registerSyncWriteTools(server: McpServer): void {
 
   server.tool(
     'soundiiz_sync_delete',
-    'Delete a Soundiiz sync. Requires writes.allow=true and a confirmation token (unless writes.confirmDestructive=false).',
+    'Delete a Soundiiz sync. Returns a confirmId on the first call; re-call with the same args plus that confirmId to execute (skip via writes.confirmDestructive=false).',
     {
       id: z.number().int().positive(),
       confirmId: z.string().optional(),
@@ -241,7 +239,7 @@ function registerSyncWriteTools(server: McpServer): void {
     async (args) => {
       const config = getConfig();
       if (!config.writes.allow) {
-        return toolError('Writes are disabled. Set writes.allow=true to enable.');
+        return toolError('Writes are disabled in config (writes.allow=false).');
       }
       const allowed = checkSyncAllowed(args.id);
       if (!allowed.ok) return toolError(allowed.reason!);

@@ -4,7 +4,7 @@ Working notes for design decisions made during initial scoping. These are not co
 
 ## Why mirror vrchat-mcp?
 
-BASIC-BIT's vrchat-mcp is the reference implementation of the BASICs MCP pattern: curated tools first, OpenAPI-driven generated layers second, raw call last; read-only by default; opt-in writes; allowlists; confirmation tokens; cookie/key store with multiple backends; logs to stderr; vendored spec; opt-in live evals. Reusing the same skeleton means:
+BASIC-BIT's vrchat-mcp is the reference implementation of the BASICs MCP pattern: curated tools first, OpenAPI-driven generated layers second, raw call last; confirmation tokens for destructive ops; allowlists; cookie/key store with multiple backends; logs to stderr; vendored spec; opt-in live evals. Reusing the same skeleton means:
 
 - Faster scaffolding (we know which files exist and why).
 - Consistent operator UX across BASIC's MCP servers.
@@ -17,7 +17,7 @@ Differences from vrchat-mcp that simplify Soundiiz MCP:
 - No realtime websocket pipeline — the Soundiiz API is REST-only.
 - No 2FA / cookie management complexity — Bearer auth only.
 - Tiny API surface (8 endpoints) so curated coverage is essentially complete from day one.
-- No need for `keytar` on day one (env var is fine for v0.1); add as `auth.keyStore=keychain` opt-in.
+- `keytar` is wired in from v0.1 with `auth.keyStore=keychain`. Env and file stores are also available.
 
 ## Why vendor the spec instead of fetching at runtime?
 

@@ -43,12 +43,12 @@ const CURATED: CuratedRow[] = [
   {
     name: 'soundiiz_sync_trigger',
     tier: 'write-medium',
-    description: 'Trigger a sync (writes.allow + confirmation token).',
+    description: 'Trigger a sync (confirmation token, then execute).',
   },
   {
     name: 'soundiiz_sync_delete',
     tier: 'write-destructive',
-    description: 'Delete a sync (writes.allow + confirmation token).',
+    description: 'Delete a sync (confirmation token, then execute).',
   },
   {
     name: 'soundiiz_smartlinks_list',
@@ -64,7 +64,7 @@ const CURATED: CuratedRow[] = [
   {
     name: 'soundiiz_smartlink_delete',
     tier: 'write-destructive',
-    description: 'Delete a SmartLink (writes.allow + confirmation token).',
+    description: 'Delete a SmartLink (confirmation token, then execute).',
   },
   {
     name: 'soundiiz_cache_invalidate',

@@ -14,12 +14,10 @@ function validateConfig(): void {
   if (!ua || ua.startsWith('soundiiz-mcp/')) {
     logger.debug('Using default user-agent', { userAgent: ua });
   }
-  if (config.writes.allow) {
-    logger.warn('Writes are ENABLED', {
-      confirmDestructive: config.writes.confirmDestructive,
-      syncsAllowlist: config.syncs.allowlist.length,
-      smartlinksAllowlist: config.smartlinks.allowlist.length,
-    });
+  if (!config.writes.allow) {
+    logger.info('Writes disabled (writes.allow=false). All non-GET tools will refuse.');
+  } else if (!config.writes.confirmDestructive) {
+    logger.warn('Destructive confirmations disabled. DELETE and trigger run without a confirmId.');
   }
 }
 

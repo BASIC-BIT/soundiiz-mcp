@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Read-only live smoke test against the real Soundiiz API. Requires SOUNDIIZ_API_KEY.
+// Live smoke test against the real Soundiiz API. Requires SOUNDIIZ_API_KEY. Calls only GETs.
 // Asserts only structural invariants (response shape) — does not assert specific contents.
 import { authManager } from '../src/auth/index.js';
 import { CallError } from '../src/core/client.js';

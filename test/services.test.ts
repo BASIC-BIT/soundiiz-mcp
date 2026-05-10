@@ -96,9 +96,14 @@ describe('services (mock server)', () => {
     expect(handle.state.smartlinks.length).toBe(before - 1);
   });
 
-  it('blocks writes when not opted in', async () => {
-    delete process.env.SOUNDIIZ_MCP_ALLOW_WRITES;
+  it('blocks writes when explicitly disabled', async () => {
+    process.env.SOUNDIIZ_MCP_ALLOW_WRITES = 'false';
     resetConfigCacheForTest();
-    await expect(triggerSync(1)).rejects.toBeInstanceOf(CallError);
+    try {
+      await expect(triggerSync(1)).rejects.toBeInstanceOf(CallError);
+    } finally {
+      delete process.env.SOUNDIIZ_MCP_ALLOW_WRITES;
+      resetConfigCacheForTest();
+    }
   });
 });

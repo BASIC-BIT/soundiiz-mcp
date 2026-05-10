@@ -4,10 +4,10 @@ This is the human-oriented overview for how to use the tool surface. The full, g
 
 ## How to use tools
 
-- Prefer **curated tools** first. They are designed for agent ergonomics and include summary flows.
-- Use **auto-generated tools** (`soundiiz_read_<operationId>`, `soundiiz_write_<operationId>`) only when a curated tool does not exist.
-- **Writes are opt-in**. Set `writes.allow = true` (or `SOUNDIIZ_MCP_ALLOW_WRITES=true`) to enable any non-GET operation.
+- Prefer **curated tools** first. They are designed for agent ergonomics, include summary flows, and layer the confirmation-token flow on destructive operations.
+- Use **auto-generated tools** (`soundiiz_read_<operationId>`, `soundiiz_write_<operationId>`) only when a curated tool does not exist. The auto-generated layer does NOT add the confirmation flow.
 - **Destructive writes (DELETE, sync trigger) require a confirmation token** unless `writes.confirmDestructive=false`. The first call returns `confirm_required` with a `confirmId`; the second call (same args + `confirmId`) executes.
+- Lock the server to GET-only with `writes.allow = false` (or `SOUNDIIZ_MCP_ALLOW_WRITES=false`).
 - Sync write actions can be restricted by `syncs.allowlist`. SmartLink write actions can be restricted by `smartlinks.allowlist`.
 
 ## Typical agent flows

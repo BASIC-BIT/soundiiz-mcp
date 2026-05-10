@@ -9,7 +9,7 @@
     "keyFile": "~/.soundiiz-mcp-key"
   },
   "writes": {
-    "allow": false,
+    "allow": true,
     "confirmDestructive": true,
     "confirmTtlMs": 120000
   },

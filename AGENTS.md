@@ -10,8 +10,8 @@ This repo uses linting, typechecking, and tests to validate changes.
 - For PR review workflow: before pushing any new commits, respond to each open review comment (reply or reaction) and resolve the thread.
 - Keep stdout reserved for MCP protocol; log to stderr only.
 - Config defaults live in `src/config/defaults.json`; override via `SOUNDIIZ_MCP_CONFIG_FILE` (env overrides still supported).
-- Default to read-only calls. Non-GET requests are blocked unless `writes.allow=true` (or env override).
-- Destructive writes (DELETE, sync trigger) require a confirmation token unless `writes.confirmDestructive=false`.
+- Writes are enabled by default. Set `writes.allow=false` to lock the server to GET-only mode.
+- Destructive writes (DELETE, sync trigger) require a confirmation token unless `writes.confirmDestructive=false`. Treat the confirmation flow as the canonical safety net for destructive operations.
 - Regenerate tool catalog docs after spec updates: `npm run generate:tools-docs`.
 - Refetch the Soundiiz OpenAPI spec when the upstream BETA changes: `npm run sync:spec`. This rewrites `specs/soundiiz-openapi.json`. Diff the file before committing — the spec is in BETA and may shift.
 - Regenerate Zod schemas after spec updates: `npm run generate:schemas` (updates `src/generated/soundiiz-schemas.ts`; do not edit manually).

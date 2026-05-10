@@ -1,7 +1,7 @@
 {
   "name": "soundiiz-mcp",
   "version": "0.1.0",
-  "description": "Local-first MCP server for safe AI access to Soundiiz syncs and SmartLinks. Read-only by default with confirmation-gated writes.",
+  "description": "MCP server for Soundiiz syncs and SmartLinks. Curated tools, auto-generated read/write layer from the OpenAPI spec, and confirmation-gated destructive operations.",
   "type": "module",
   "main": "dist/src/index.js",
   "bin": {

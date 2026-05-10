@@ -15,7 +15,7 @@ These should pass on every PR. They use mock fixtures and the vendored OpenAPI s
 
 `test/e2e/mock.test.ts` spins up a local mock HTTP server (driven by `test/fixtures/spec.yaml`) and runs the curated tools end-to-end through the MCP harness. No network, no API key required.
 
-## Read-only live smoke (opt-in)
+## Live smoke (opt-in)
 
 ```bash
 npm run build

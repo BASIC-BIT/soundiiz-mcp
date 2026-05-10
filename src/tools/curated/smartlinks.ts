@@ -128,7 +128,7 @@ export function registerCuratedSmartlinkTools(server: McpServer): void {
 
   server.tool(
     'soundiiz_smartlink_delete',
-    'Delete a Soundiiz SmartLink. Requires writes.allow=true and a confirmation token (unless writes.confirmDestructive=false).',
+    'Delete a Soundiiz SmartLink. Returns a confirmId on the first call; re-call with the same args plus that confirmId to execute (skip via writes.confirmDestructive=false).',
     {
       id: z.number().int().positive(),
       confirmId: z.string().optional(),
@@ -136,7 +136,7 @@ export function registerCuratedSmartlinkTools(server: McpServer): void {
     async (args) => {
       const config = getConfig();
       if (!config.writes.allow) {
-        return toolError('Writes are disabled. Set writes.allow=true to enable.');
+        return toolError('Writes are disabled in config (writes.allow=false).');
       }
       const allowed = checkSmartlinkAllowed(args.id);
       if (!allowed.ok) return toolError(allowed.reason!);

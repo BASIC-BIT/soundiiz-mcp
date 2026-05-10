@@ -9,7 +9,8 @@ without paginating through the underlying API.
 - Small and explicit: each tool has a single, obvious purpose.
 - Human-input friendly: accept titles / shortcodes when the API allows; IDs are first-class for precision.
 - Composable: outputs include IDs and metadata for follow-ups.
-- Safe by default: write tools are opt-in via `writes.allow`; destructive writes additionally require a confirmation token.
+- Confirmation-token flow is the canonical safety net for destructive operations.
+- `writes.allow=false` is an explicit kill switch for environments that should be GET-only.
 - Allowlist guards: per-resource (`syncs.allowlist`, `smartlinks.allowlist`) for write scopes.
 
 ## Risk tiers
@@ -17,9 +18,8 @@ without paginating through the underlying API.
 | Tier        | Examples                                                        | Gating                                                            |
 | ----------- | --------------------------------------------------------------- | ----------------------------------------------------------------- |
 | read        | `soundiiz_me`, `soundiiz_syncs_list`, `soundiiz_smartlink_get`  | Always enabled.                                                   |
-| low write   | (none yet — Soundiiz BETA has no idempotent low-risk writes)    | `writes.allow=true`.                                              |
-| medium      | `soundiiz_sync_trigger`                                         | `writes.allow=true` + confirmation token + sync allowlist (if set). |
-| destructive | `soundiiz_sync_delete`, `soundiiz_smartlink_delete`             | `writes.allow=true` + confirmation token + resource allowlist (if set). |
+| medium      | `soundiiz_sync_trigger`                                         | Confirmation token + sync allowlist (if set). Honors `writes.allow`.   |
+| destructive | `soundiiz_sync_delete`, `soundiiz_smartlink_delete`             | Confirmation token + resource allowlist (if set). Honors `writes.allow`. |
 
 ## Curated tools (planned for v0.1)
 
@@ -36,7 +36,7 @@ Syncs (read):
 - `soundiiz_syncs_due` — syncs scheduled to run within a window. Args: `withinHours?` (default 24).
 - `soundiiz_syncs_failures_recent` — recent failed executions across syncs. Args: `limit?` (default 10).
 
-Syncs (write, opt-in):
+Syncs (write):
 
 - `soundiiz_sync_trigger` — request execution. Args: `id` (required), `confirmId?`. Returns `confirm_required` then `accepted`. Maps `409 TOO_MANY_SYNCS_IN_PROGRESS` and `409 SYNC_PROCESSING/SYNC_PENDING` to clean guidance.
 - `soundiiz_sync_delete` — destructive. Args: `id` (required), `confirmId?`. Returns `confirm_required` then `deleted`. Maps `409 SYNC_PROCESSING/SYNC_PENDING` to "wait for the in-flight execution before deleting".
@@ -47,7 +47,7 @@ SmartLinks (read):
 - `soundiiz_smartlink_get` — detail. Args: `id` (required).
 - `soundiiz_smartlinks_overview` — counts by status, by category, by platform across all `links[]`; plus most-recently-updated shortlist.
 
-SmartLinks (write, opt-in):
+SmartLinks (write):
 
 - `soundiiz_smartlink_delete` — destructive. Args: `id` (required), `confirmId?`.
 
@@ -59,8 +59,8 @@ System (local-only):
 ## Auto-generated layers
 
 - `soundiiz_read_<operationId>` — enabled by default (one per GET in the spec).
-- `soundiiz_write_<operationId>` — enabled by default but gated by `writes.allow`. Destructive ops also require a `confirmId`.
-- `soundiiz_call` — raw operationId invocation. Disabled by default; enable via `rawTools.enabled`.
+- `soundiiz_write_<operationId>` — enabled by default. Honors `writes.allow`. Destructive ops at this layer do NOT layer the confirmation flow — that's only on the curated tools. If you need agent-safe destructive writes, use the curated tools.
+- `soundiiz_call` — raw operationId invocation. Off by default; enable via `rawTools.enabled`.
 
 For the current BETA spec, the auto-generated layers add:
 

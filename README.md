@@ -1,10 +1,10 @@
 # Soundiiz MCP
 
-An MCP server for [Soundiiz](https://soundiiz.com). Lets your AI assistant inspect your sync jobs and SmartLinks across streaming services, and — when you opt in — trigger or delete them.
+An MCP server for [Soundiiz](https://soundiiz.com). Lets your AI assistant inspect your sync jobs and SmartLinks across streaming services, trigger syncs, and clean up stale links.
 
 Built for [Claude Desktop](https://claude.ai/download), [OpenCode](https://opencode.ai/), and any other [Model Context Protocol](https://modelcontextprotocol.io/) client.
 
-Read-only by default. Your API key stays on your machine. Curated tools on top of the Soundiiz User API so agents don't have to paginate through raw endpoints.
+Your API key stays on your machine. Curated tools on top of the Soundiiz User API so agents don't have to paginate through raw endpoints.
 
 This project is unofficial and is not affiliated with Soundiiz.
 
@@ -13,18 +13,23 @@ This project is unofficial and is not affiliated with Soundiiz.
 - Show me all my Soundiiz syncs and which ones are due to run next.
 - Summarize sync status: how many succeeded, how many failed, which platforms are involved.
 - Which syncs failed recently, and why?
-- Trigger sync #42 to run now (after writes are explicitly enabled).
+- Trigger sync #42 to run now.
 - List all my published SmartLinks and their shortcodes.
 - Show details for SmartLink "abc123": fallback URL, per-platform links, status.
-- Delete this stale draft SmartLink (after writes are explicitly enabled and confirmed).
+- Delete this stale draft SmartLink.
 
 ## Writes and confirmations
 
-The Soundiiz API exposes three write operations: delete sync, delete smartlink, and trigger sync. None are callable by default.
+The Soundiiz API exposes three write operations: delete sync, delete smartlink, and trigger sync. All three are callable, but each goes through a two-step confirm flow:
 
-- Set `writes.allow = true` or `SOUNDIIZ_MCP_ALLOW_WRITES=true` to enable writes.
-- Destructive writes (DELETE) and `soundiiz_sync_trigger` return a `confirmId` on the first call. Re-call with the same args plus `confirmId` to execute. Disable via `writes.confirmDestructive = false` if you trust the caller.
-- Restrict writes to specific IDs with `syncs.allowlist` and `smartlinks.allowlist`.
+1. The first call returns a `confirmId` and a recap of what would happen.
+2. Re-call the same tool with the same args plus that `confirmId` to execute. The token is single-use and bound to the tool name + arg hash.
+
+Knobs:
+
+- `writes.confirmDestructive = false` — skip the confirm step (one-call writes).
+- `writes.allow = false` (or `SOUNDIIZ_MCP_ALLOW_WRITES=false`) — disable writes entirely.
+- `syncs.allowlist` / `smartlinks.allowlist` — restrict writes to specific IDs.
 
 ## Auth and storage
 
@@ -131,9 +136,9 @@ Common environment variables:
 
 Soundiiz MCP exposes three layers (mirroring the vrchat-mcp pattern):
 
-- **Curated tools** for common agent workflows: `soundiiz_me`, `soundiiz_syncs_list`, `soundiiz_syncs_overview`, `soundiiz_syncs_due`, `soundiiz_sync_get`, `soundiiz_smartlinks_list`, `soundiiz_smartlinks_overview`, `soundiiz_smartlink_get`, plus opt-in writes `soundiiz_sync_trigger`, `soundiiz_sync_delete`, `soundiiz_smartlink_delete`.
+- **Curated tools** for common agent workflows: `soundiiz_me`, `soundiiz_syncs_list`, `soundiiz_syncs_overview`, `soundiiz_syncs_due`, `soundiiz_sync_get`, `soundiiz_smartlinks_list`, `soundiiz_smartlinks_overview`, `soundiiz_smartlink_get`, `soundiiz_sync_trigger`, `soundiiz_sync_delete`, `soundiiz_smartlink_delete`.
 - **Auto-generated read tools** named `soundiiz_read_<operationId>` for GET operations from the Soundiiz OpenAPI spec.
-- **Auto-generated write tools** named `soundiiz_write_<operationId>` for non-GET operations. These remain gated by `writes.allow`.
+- **Auto-generated write tools** named `soundiiz_write_<operationId>` for non-GET operations.
 
 Local-only tools include:
 
@@ -163,7 +168,7 @@ Useful scripts:
 - `npm run check` — lint + typecheck + test.
 - `npm run mcp:status` — check whether the configured key authenticates.
 - `npm run mcp:list-tools`, `npm run mcp:call` — local harness.
-- `npm run smoke:live` — opt-in read-only live smoke matrix against the built server.
+- `npm run smoke:live` — opt-in live smoke matrix against the built server.
 - `npm run sync:spec` — refetch the Soundiiz OpenAPI spec from `https://soundiiz.com/api/doc`.
 - `npm run generate:schemas` — regenerate Zod schemas from `specs/soundiiz-openapi.json`.
 - `npm run generate:tools-docs` — regenerate `docs/tools.md`.
@@ -191,7 +196,7 @@ Local checks:
 npm run check
 ```
 
-Read-only live smoke checks are opt-in and require a Creator-plan API key:
+Live smoke checks are opt-in and require a Creator-plan API key:
 
 ```bash
 npm run build

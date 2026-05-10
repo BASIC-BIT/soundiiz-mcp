@@ -5,7 +5,7 @@ This is the working checklist for taking Soundiiz MCP from a fresh repo to a pub
 ## Goals
 
 - Make the project discoverable to people searching for Soundiiz, MCP, Claude, OpenCode, music sync automation, and SmartLinks tooling.
-- Keep trust and safety as the leading message: read-only by default, local-first authentication, explicit and confirmation-gated writes, and no affiliation with Soundiiz.
+- Lead with concrete behavior: confirmation tokens on destructive operations, local API key storage, allowlist guards, no affiliation with Soundiiz.
 - Prefer durable developer surfaces over broad paid ads for the first launch.
 - Use a short feedback loop: ship public, watch installs / issues / stars / registry traffic, then decide whether broader promotion is worth it.
 
@@ -53,7 +53,7 @@ This is the working checklist for taking Soundiiz MCP from a fresh repo to a pub
 Candidate server description:
 
 ```text
-Local-first MCP server for safe AI access to Soundiiz syncs and SmartLinks. Read-only by default with confirmation-gated writes. Requires a Creator-plan API key.
+MCP server for Soundiiz syncs and SmartLinks. Curated tools, auto-generated read/write layer from the OpenAPI spec, confirmation-gated destructive operations. Requires a Creator-plan API key.
 ```
 
 ## Community Launch Channels
@@ -87,13 +87,13 @@ If we test paid later, use a capped experiment:
 Short description:
 
 ```text
-Soundiiz MCP gives AI assistants safe, local-first access to Soundiiz syncs and SmartLinks, with read-only defaults and confirmation-gated writes.
+Soundiiz MCP gives AI assistants curated tools for inspecting and managing Soundiiz syncs and SmartLinks, with confirmation tokens on destructive operations.
 ```
 
 One paragraph:
 
 ```text
-Soundiiz MCP is an unofficial Model Context Protocol server for the Soundiiz User API. It is read-only by default, keeps your API key local, and gives MCP clients like Claude Desktop and OpenCode curated tools to inspect sync jobs, summarize SmartLinks, and (with explicit opt-in) trigger or clean them up.
+Soundiiz MCP is an unofficial Model Context Protocol server for the Soundiiz User API. It keeps your API key on your machine and gives MCP clients like Claude Desktop and OpenCode curated tools to inspect sync jobs, summarize SmartLinks, and trigger or clean them up — with confirmation tokens on the destructive ones.
 ```
 
 Launch post draft:
@@ -101,7 +101,7 @@ Launch post draft:
 ```text
 I am releasing Soundiiz MCP, an unofficial local-first MCP server for Soundiiz.
 
-It lets MCP clients answer questions like "which of my syncs are due to run today" and "which SmartLinks are still drafts," and can trigger or delete syncs/links after you opt in to writes.
+It lets MCP clients answer questions like "which of my syncs are due to run today" and "which SmartLinks are still drafts," and can trigger or delete syncs/links — with a confirmation token on each destructive call so the agent can't accidentally one-shot it.
 
 Requires a Soundiiz Creator-plan API key (User API is in BETA).
 
@@ -127,7 +127,7 @@ Settings -> General -> Social preview -> Edit -> Upload an image
 - Watch GitHub issues and discussions closely.
 - Pin or link one canonical install/config answer if repeated questions appear.
 - Keep a short known-issues section in the release notes (especially around BETA spec drift).
-- Avoid enabling write-heavy demos until users understand the write opt-in + confirmation model.
+- In demos, walk through the confirmation flow once so users see the two-call rhythm before assuming an agent can one-shot a delete.
 - Track which channels actually send qualified users.
 
 ## Open Questions
