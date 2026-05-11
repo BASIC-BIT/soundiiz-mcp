@@ -39,6 +39,7 @@
     "mcp:call": "tsx scripts/mcp-client.ts call",
     "sync:spec": "tsx scripts/sync-spec.ts",
     "generate:tools-docs": "tsx scripts/generate-tools-docs.ts",
+    "build:assets": "tsx scripts/build-assets.ts",
     "mcpo": "uvx mcpo --port 8000 --api-key \"top-secret\" -- npx tsx src/index.ts",
     "start": "node dist/bin/cli.js"
   },

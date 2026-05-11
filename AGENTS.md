@@ -13,6 +13,7 @@ This repo uses linting, typechecking, and tests to validate changes.
 - Writes are enabled by default. Set `writes.allow=false` to lock the server to GET-only mode.
 - Destructive writes (DELETE, sync trigger) require a confirmation token unless `writes.confirmDestructive=false`. Treat the confirmation flow as the canonical safety net for destructive operations.
 - Regenerate tool catalog docs after spec updates: `npm run generate:tools-docs`.
+- The brand mark lives in `scripts/lib/mark.ts`. **Do not hand-edit `assets/logo.svg` or `assets/social-preview.svg`.** Edit the mark module, then run `npm run build:assets` to regenerate both surfaces and the social-preview PNG together. The two assets share gradient ids and geometry by construction, so they cannot drift.
 - Refetch the Soundiiz OpenAPI spec when the upstream BETA changes: `npm run sync:spec`. This rewrites `specs/soundiiz-openapi.json`. Diff the file before committing — the spec is in BETA and may shift.
 - Regenerate Zod schemas after spec updates: `npm run generate:schemas` (updates `src/generated/soundiiz-schemas.ts`; do not edit manually).
 - Regenerate mock test schemas after spec tweaks: `npm run generate:test-schemas`.
