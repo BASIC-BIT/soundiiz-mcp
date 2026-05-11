@@ -69,19 +69,15 @@
 
   <!-- Left side: text block -->
   <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
-    <!-- Top kicker -->
-    <text x="80" y="180" fill="#c7d2fe" font-size="26" font-weight="600" letter-spacing="6" opacity="0.85">
-      MCP SERVER
-    </text>
     <!-- Title -->
-    <text x="80" y="280" fill="#ffffff" font-size="92" font-weight="800" letter-spacing="-2">
+    <text x="80" y="270" fill="#ffffff" font-size="92" font-weight="800" letter-spacing="-2">
       Soundiiz MCP
     </text>
     <!-- Subtitle -->
-    <text x="80" y="350" fill="#e9d5ff" font-size="34" font-weight="500">
+    <text x="80" y="340" fill="#e9d5ff" font-size="34" font-weight="500">
       Inspect, trigger, and clean up your
     </text>
-    <text x="80" y="395" fill="#e9d5ff" font-size="34" font-weight="500">
+    <text x="80" y="385" fill="#e9d5ff" font-size="34" font-weight="500">
       music sync jobs and SmartLinks.
     </text>
 
