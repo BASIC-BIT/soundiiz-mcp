@@ -1,6 +1,7 @@
 {
   "name": "soundiiz-mcp",
   "version": "0.1.0",
+  "mcpName": "io.github.basic-bit/soundiiz-mcp",
   "description": "MCP server for Soundiiz syncs and SmartLinks. Curated tools, auto-generated read/write layer from the OpenAPI spec, and confirmation-gated destructive operations.",
   "type": "module",
   "main": "dist/src/index.js",
@@ -10,11 +11,13 @@
   "files": [
     "dist",
     "specs/soundiiz-openapi.json",
+    "assets/logo.svg",
     "docs/architecture.md",
     "docs/curated-tools.md",
     "docs/design-notes.md",
     "docs/evals.md",
     "docs/tools-guide.md",
+    "CHANGELOG.md",
     "README.md",
     "LICENSE"
   ],

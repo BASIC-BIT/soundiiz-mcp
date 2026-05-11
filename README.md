@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.svg" alt="Soundiiz MCP logo" width="112" height="112" />
+</p>
+
 # Soundiiz MCP
 
 An MCP server for [Soundiiz](https://soundiiz.com). Lets your AI assistant inspect your sync jobs and SmartLinks across streaming services, trigger syncs, and clean up stale links.
@@ -7,6 +11,10 @@ Built for [Claude Desktop](https://claude.ai/download), [OpenCode](https://openc
 Your API key stays on your machine. Curated tools on top of the Soundiiz User API so agents don't have to paginate through raw endpoints.
 
 This project is unofficial and is not affiliated with Soundiiz.
+
+## Status
+
+`v0.1.0` — early. The Soundiiz User API is itself in BETA, so the surface this server wraps may shift. The 25-test mock suite exercises every curated tool, but the maintainer hasn't run it against a real Creator-plan account in the wild — if you're an early adopter, please try `npm run smoke:live` and file an issue if anything breaks.
 
 ## What You Can Ask
 

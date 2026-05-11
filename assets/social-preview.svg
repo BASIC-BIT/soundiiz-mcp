@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" role="img" aria-labelledby="title">
+  <title id="title">Soundiiz MCP — social preview</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="640" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#13082e" />
+      <stop offset="0.55" stop-color="#1f0a44" />
+      <stop offset="1" stop-color="#0b0721" />
+    </linearGradient>
+    <linearGradient id="hub" x1="100" y1="100" x2="220" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f472b6" />
+      <stop offset="0.55" stop-color="#a855f7" />
+      <stop offset="1" stop-color="#6366f1" />
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fbcfe8" stop-opacity="0.85" />
+      <stop offset="1" stop-color="#c7d2fe" stop-opacity="0.85" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#a855f7" stop-opacity="0.45" />
+      <stop offset="1" stop-color="#a855f7" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f472b6" />
+      <stop offset="1" stop-color="#a855f7" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#bg)" />
+
+  <!-- Subtle dot grid pattern -->
+  <g fill="#ffffff" fill-opacity="0.05">
+    <circle cx="80"   cy="80"  r="2"/><circle cx="160"  cy="80"  r="2"/><circle cx="240"  cy="80"  r="2"/>
+    <circle cx="320"  cy="80"  r="2"/><circle cx="400"  cy="80"  r="2"/><circle cx="480"  cy="80"  r="2"/>
+    <circle cx="560"  cy="80"  r="2"/><circle cx="640"  cy="80"  r="2"/><circle cx="720"  cy="80"  r="2"/>
+    <circle cx="800"  cy="80"  r="2"/><circle cx="880"  cy="80"  r="2"/><circle cx="960"  cy="80"  r="2"/>
+    <circle cx="1040" cy="80"  r="2"/><circle cx="1120" cy="80"  r="2"/><circle cx="1200" cy="80"  r="2"/>
+    <circle cx="80"   cy="560" r="2"/><circle cx="160"  cy="560" r="2"/><circle cx="240"  cy="560" r="2"/>
+    <circle cx="320"  cy="560" r="2"/><circle cx="400"  cy="560" r="2"/><circle cx="480"  cy="560" r="2"/>
+    <circle cx="560"  cy="560" r="2"/><circle cx="640"  cy="560" r="2"/><circle cx="720"  cy="560" r="2"/>
+    <circle cx="800"  cy="560" r="2"/><circle cx="880"  cy="560" r="2"/><circle cx="960"  cy="560" r="2"/>
+    <circle cx="1040" cy="560" r="2"/><circle cx="1120" cy="560" r="2"/><circle cx="1200" cy="560" r="2"/>
+  </g>
+
+  <!-- Right side: hub-and-spoke mark -->
+  <g transform="translate(880, 160)">
+    <circle cx="160" cy="160" r="170" fill="url(#glow)" />
+    <g stroke="url(#line)" stroke-width="11" stroke-linecap="round" fill="none">
+      <line x1="160" y1="160" x2="160" y2="40"  />
+      <line x1="160" y1="160" x2="280" y2="160" />
+      <line x1="160" y1="160" x2="160" y2="280" />
+      <line x1="160" y1="160" x2="40"  y2="160" />
+    </g>
+    <g fill="#f8fafc">
+      <circle cx="160" cy="40"  r="20" />
+      <circle cx="280" cy="160" r="20" />
+      <circle cx="160" cy="280" r="20" />
+      <circle cx="40"  cy="160" r="20" />
+    </g>
+    <g fill="#a855f7">
+      <circle cx="160" cy="40"  r="7.5" />
+      <circle cx="280" cy="160" r="7.5" />
+      <circle cx="160" cy="280" r="7.5" />
+      <circle cx="40"  cy="160" r="7.5" />
+    </g>
+    <circle cx="160" cy="160" r="42" fill="url(#hub)" />
+    <circle cx="160" cy="160" r="42" fill="none" stroke="#f8fafc" stroke-width="4" />
+    <circle cx="160" cy="160" r="13" fill="#f8fafc" />
+  </g>
+
+  <!-- Left side: text block -->
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+    <!-- Top kicker -->
+    <text x="80" y="180" fill="#c7d2fe" font-size="26" font-weight="600" letter-spacing="6" opacity="0.85">
+      MCP SERVER
+    </text>
+    <!-- Title -->
+    <text x="80" y="280" fill="#ffffff" font-size="92" font-weight="800" letter-spacing="-2">
+      Soundiiz MCP
+    </text>
+    <!-- Subtitle -->
+    <text x="80" y="350" fill="#e9d5ff" font-size="34" font-weight="500">
+      Inspect, trigger, and clean up your
+    </text>
+    <text x="80" y="395" fill="#e9d5ff" font-size="34" font-weight="500">
+      music sync jobs and SmartLinks.
+    </text>
+
+    <!-- Footer URL -->
+    <text x="80" y="570" fill="#a5b4fc" font-size="22" font-weight="500" opacity="0.85">
+      github.com/BASIC-BIT/soundiiz-mcp
+    </text>
+  </g>
+</svg>

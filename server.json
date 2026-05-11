@@ -1,0 +1,52 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "io.github.basic-bit/soundiiz-mcp",
+  "description": "MCP server for Soundiiz syncs and SmartLinks. Curated tools, auto-generated read/write layer from the OpenAPI spec, and confirmation-gated destructive operations.",
+  "status": "active",
+  "repository": {
+    "url": "https://github.com/BASIC-BIT/soundiiz-mcp",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "soundiiz-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "SOUNDIIZ_API_KEY",
+          "description": "Personal Soundiiz User API key. Generate at https://soundiiz.com/webapp/settings/api (requires Creator-plan subscription).",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "SOUNDIIZ_MCP_KEY_STORE",
+          "description": "Where to read/persist the API key: env (default), file, or keychain (OS keychain via keytar).",
+          "isRequired": false,
+          "default": "env"
+        },
+        {
+          "name": "SOUNDIIZ_MCP_USER_AGENT",
+          "description": "Descriptive user agent sent to the Soundiiz API. Include contact info when possible.",
+          "isRequired": false
+        },
+        {
+          "name": "SOUNDIIZ_MCP_ALLOW_WRITES",
+          "description": "Set to false to lock the server to GET-only mode. Defaults to true.",
+          "isRequired": false,
+          "default": "true"
+        },
+        {
+          "name": "SOUNDIIZ_MCP_CONFIRM_DESTRUCTIVE",
+          "description": "Set to false to skip the confirmation-token flow on destructive operations. Defaults to true.",
+          "isRequired": false,
+          "default": "true"
+        }
+      ]
+    }
+  ]
+}
