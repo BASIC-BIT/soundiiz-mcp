@@ -15,11 +15,11 @@ without paginating through the underlying API.
 
 ## Risk tiers
 
-| Tier        | Examples                                                        | Gating                                                            |
-| ----------- | --------------------------------------------------------------- | ----------------------------------------------------------------- |
-| read        | `soundiiz_me`, `soundiiz_syncs_list`, `soundiiz_smartlink_get`  | Always enabled.                                                   |
-| medium      | `soundiiz_sync_trigger`                                         | Confirmation token + sync allowlist (if set). Honors `writes.allow`.   |
-| destructive | `soundiiz_sync_delete`, `soundiiz_smartlink_delete`             | Confirmation token + resource allowlist (if set). Honors `writes.allow`. |
+| Tier            | Examples                                                        | Gating                                                                 |
+| --------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| read            | `soundiiz_me`, `soundiiz_syncs_list`, `soundiiz_smartlink_get`  | Always enabled.                                                        |
+| non-destructive | `soundiiz_sync_trigger`                                         | Sync allowlist (if set). Honors `writes.allow`. No confirmation token. |
+| destructive     | `soundiiz_sync_delete`, `soundiiz_smartlink_delete`             | Confirmation token + resource allowlist (if set). Honors `writes.allow`. |
 
 ## Curated tools (planned for v0.1)
 
@@ -38,7 +38,7 @@ Syncs (read):
 
 Syncs (write):
 
-- `soundiiz_sync_trigger` — request execution. Args: `id` (required), `confirmId?`. Returns `confirm_required` then `accepted`. Maps `409 TOO_MANY_SYNCS_IN_PROGRESS` and `409 SYNC_PROCESSING/SYNC_PENDING` to clean guidance.
+- `soundiiz_sync_trigger` — request execution. Args: `id` (required). Executes in one call (no confirmation token). Returns `{ ok: true, status: 'accepted', message }`. Maps `409 TOO_MANY_SYNCS_IN_PROGRESS` and `409 SYNC_PROCESSING/SYNC_PENDING` to clean guidance.
 - `soundiiz_sync_delete` — destructive. Args: `id` (required), `confirmId?`. Returns `confirm_required` then `deleted`. Maps `409 SYNC_PROCESSING/SYNC_PENDING` to "wait for the in-flight execution before deleting".
 
 SmartLinks (read):

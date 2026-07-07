@@ -87,14 +87,21 @@ MCP client
     → MCP response (smallest field set, IDs included)
 ```
 
-## Data flow (write path with confirmation)
+## Data flow (write paths)
 
 ```
+# Non-destructive write (sync trigger): one call, no confirmation.
 MCP client → soundiiz_sync_trigger {id: 42}
-  → service: writes.allow? ✓  allowlist? ✓  destructive? ✓ → returns confirm_required + confirmId
-MCP client → soundiiz_sync_trigger {id: 42, confirmId: "…"}
-  → service: token valid + arg hash matches?
+  → service: writes.allow? ✓  syncs.allowlist? ✓
     → core/client.executeOperation('post_…getmesyncsexecute', {id: 42})
-    → on 202: invalidate sync cache for id=42, return success
-    → on 409 TOO_MANY_SYNCS_IN_PROGRESS: return structured guidance
+    → on 202: invalidate sync cache for id=42, return { ok: true, status, message }
+    → on 409 TOO_MANY_SYNCS_IN_PROGRESS / SYNC_PROCESSING: return structured guidance
+
+# Destructive write (delete): two-step confirmation.
+MCP client → soundiiz_sync_delete {id: 42}
+  → service: writes.allow? ✓  allowlist? ✓ → returns confirm_required + confirmId
+MCP client → soundiiz_sync_delete {id: 42, confirmId: "…"}
+  → service: token valid + arg hash matches?
+    → core/client.executeOperation('delete_…getmesyncsdelete', {id: 42})
+    → on 200: invalidate sync cache for id=42, return success
 ```

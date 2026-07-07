@@ -53,6 +53,12 @@ describe('services (mock server)', () => {
   it('lists syncs paginated and unrolled', async () => {
     const page = await listSyncsPage(0, 10);
     expect(page.total).toBe(handle.state.syncs.length);
+    // Soundiiz returns offset/limit as strings; service must coerce to numbers.
+    expect(typeof page.offset).toBe('number');
+    expect(typeof page.limit).toBe('number');
+    expect(typeof page.total).toBe('number');
+    expect(page.offset).toBe(0);
+    expect(page.limit).toBe(10);
     const all = await listAllSyncs();
     expect(all.length).toBe(handle.state.syncs.length);
   });

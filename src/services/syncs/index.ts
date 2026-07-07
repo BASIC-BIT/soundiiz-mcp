@@ -37,9 +37,9 @@ export interface SyncDetail extends SyncSummary {
 interface ListResponse {
   data: {
     items: SyncSummary[];
-    offset: number;
-    limit: number;
-    total: number;
+    offset: number | string;
+    limit: number | string;
+    total: number | string;
   };
 }
 
@@ -62,7 +62,13 @@ export async function listSyncsPage(offset = 0, limit = DEFAULT_PAGE_SIZE): Prom
       operationId: 'get_soundiiz_openapi_v1_merest_getmesyncs',
       params: { offset, limit },
     });
-    return (result.data as ListResponse).data;
+    const page = (result.data as ListResponse).data;
+    return {
+      items: page.items,
+      offset: Number(page.offset),
+      limit: Number(page.limit),
+      total: Number(page.total),
+    };
   });
 }
 

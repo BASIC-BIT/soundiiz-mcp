@@ -7,7 +7,7 @@ import { readToolName, writeToolName } from '../src/utils/toolNames.js';
 
 interface CuratedRow {
   name: string;
-  tier: 'read' | 'write-medium' | 'write-destructive' | 'local';
+  tier: 'read' | 'write-non-destructive' | 'write-destructive' | 'local';
   description: string;
 }
 
@@ -42,8 +42,8 @@ const CURATED: CuratedRow[] = [
   { name: 'soundiiz_syncs_due', tier: 'read', description: 'Syncs due to run within a window.' },
   {
     name: 'soundiiz_sync_trigger',
-    tier: 'write-medium',
-    description: 'Trigger a sync (confirmation token, then execute).',
+    tier: 'write-non-destructive',
+    description: 'Trigger a sync now (one call, no confirmation token).',
   },
   {
     name: 'soundiiz_sync_delete',
@@ -77,8 +77,8 @@ function tierLabel(tier: CuratedRow['tier']): string {
   switch (tier) {
     case 'read':
       return 'read';
-    case 'write-medium':
-      return 'write (medium-risk)';
+    case 'write-non-destructive':
+      return 'write (non-destructive)';
     case 'write-destructive':
       return 'write (destructive)';
     case 'local':

@@ -28,14 +28,16 @@ This project is unofficial and is not affiliated with Soundiiz.
 
 ## Writes and confirmations
 
-The Soundiiz API exposes three write operations: delete sync, delete smartlink, and trigger sync. All three are callable, but each goes through a two-step confirm flow:
+The Soundiiz API exposes three write operations:
 
-1. The first call returns a `confirmId` and a recap of what would happen.
-2. Re-call the same tool with the same args plus that `confirmId` to execute. The token is single-use and bound to the tool name + arg hash.
+- **Trigger sync** — non-destructive. The sync was already configured by you and runs on a schedule; triggering early just runs it now. Executes in one call.
+- **Delete sync** and **Delete SmartLink** — destructive. Two-step confirm flow:
+  1. The first call returns a `confirmId` and a recap of what would happen.
+  2. Re-call the same tool with the same args plus that `confirmId` to execute. The token is single-use and bound to the tool name + arg hash.
 
 Knobs:
 
-- `writes.confirmDestructive = false` — skip the confirm step (one-call writes).
+- `writes.confirmDestructive = false` — skip the confirm step on deletes (one-call writes).
 - `writes.allow = false` (or `SOUNDIIZ_MCP_ALLOW_WRITES=false`) — disable writes entirely.
 - `syncs.allowlist` / `smartlinks.allowlist` — restrict writes to specific IDs.
 

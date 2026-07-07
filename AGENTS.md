@@ -11,7 +11,7 @@ This repo uses linting, typechecking, and tests to validate changes.
 - Keep stdout reserved for MCP protocol; log to stderr only.
 - Config defaults live in `src/config/defaults.json`; override via `SOUNDIIZ_MCP_CONFIG_FILE` (env overrides still supported).
 - Writes are enabled by default. Set `writes.allow=false` to lock the server to GET-only mode.
-- Destructive writes (DELETE, sync trigger) require a confirmation token unless `writes.confirmDestructive=false`. Treat the confirmation flow as the canonical safety net for destructive operations.
+- Destructive writes (DELETE only) require a confirmation token unless `writes.confirmDestructive=false`. `soundiiz_sync_trigger` is a non-destructive write and executes in one call.
 - Regenerate tool catalog docs after spec updates: `npm run generate:tools-docs`.
 - The brand mark lives in `scripts/lib/mark.ts`. **Do not hand-edit `assets/logo.svg` or `assets/social-preview.svg`.** Edit the mark module, then run `npm run build:assets` to regenerate both surfaces and the social-preview PNG together. The two assets share gradient ids and geometry by construction, so they cannot drift.
 - Refetch the Soundiiz OpenAPI spec when the upstream BETA changes: `npm run sync:spec`. This rewrites `specs/soundiiz-openapi.json`. Diff the file before committing — the spec is in BETA and may shift.
@@ -39,7 +39,7 @@ This repo uses linting, typechecking, and tests to validate changes.
 - `soundiiz_syncs_list` should auto-unroll pagination by default and return compact rows: `{id, title, source: "spotify:playlist:…", destination: "deezer:playlist:…", method, frequency, status, nextExecutionDate}`. Expose a `paginated=true` mode for partial fetches.
 - `soundiiz_syncs_overview` should return counts only (by status, by frequency, by source/destination platform pair) plus a `dueSoon` shortlist and a `recentFailures` shortlist. No raw items.
 - `soundiiz_sync_get` is KISS: accept `id`, return full detail including `lastExecutionResult`. On 404, return a structured not-found pointing at `soundiiz_syncs_list`.
-- `soundiiz_sync_trigger` is medium-risk: accept `id`, return a `confirm_required` response on first call (unless `writes.confirmDestructive=false`), execute on second call with `confirmId`. Map `409 TOO_MANY_SYNCS_IN_PROGRESS` to clean guidance ("retry later or wait for in-flight syncs").
+- `soundiiz_sync_trigger` is a non-destructive write: accept `id`, execute in one call. Map `409 TOO_MANY_SYNCS_IN_PROGRESS` and `409 SYNC_PROCESSING/SYNC_PENDING` to clean guidance ("retry later or wait for in-flight syncs"). Rationale: the sync is already configured by the user and will run on its schedule; triggering early is not data loss.
 - `soundiiz_sync_delete` and `soundiiz_smartlink_delete` are destructive: always require a `confirmId` unless explicitly disabled in config.
 - For `soundiiz_me`, return a compact summary (`{id, username, email, plan?}`) — no view presets needed for such a small payload.
 
@@ -58,9 +58,9 @@ This repo uses linting, typechecking, and tests to validate changes.
 - Surface `Retry-After` and any `X-RateLimit-*` response headers if present; fall back to bucket-only otherwise.
 - Cache aggressively to keep agent loops well under the bucket.
 
-## Confirmation tokens (medium- and high-risk writes)
+## Confirmation tokens (destructive writes only)
 
-- DELETE and sync `trigger` tools may return `confirm_required` with a `confirmId`.
+- DELETE tools (`soundiiz_sync_delete`, `soundiiz_smartlink_delete`) return `confirm_required` with a `confirmId` on the first call.
 - Re-run the tool with the same arguments + `confirmId` to execute.
 - Tokens expire after `confirmations.ttlMs` (default 120000ms).
 - Tokens are bound to the tool name + argument hash, not just the resource ID.

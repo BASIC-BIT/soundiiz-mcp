@@ -27,9 +27,9 @@ export interface SmartlinkSummary {
 interface ListResponse {
   data: {
     items: SmartlinkSummary[];
-    offset: number;
-    limit: number;
-    total: number;
+    offset: number | string;
+    limit: number | string;
+    total: number | string;
   };
 }
 
@@ -52,7 +52,13 @@ export async function listSmartlinksPage(offset = 0, limit = DEFAULT_PAGE_SIZE):
       operationId: 'get_soundiiz_openapi_v1_merest_getmesmartlinks',
       params: { offset, limit },
     });
-    return (result.data as ListResponse).data;
+    const page = (result.data as ListResponse).data;
+    return {
+      items: page.items,
+      offset: Number(page.offset),
+      limit: Number(page.limit),
+      total: Number(page.total),
+    };
   });
 }
 

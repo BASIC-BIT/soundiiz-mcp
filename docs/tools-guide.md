@@ -6,7 +6,8 @@ This is the human-oriented overview for how to use the tool surface. The full, g
 
 - Prefer **curated tools** first. They are designed for agent ergonomics, include summary flows, and layer the confirmation-token flow on destructive operations.
 - Use **auto-generated tools** (`soundiiz_read_<operationId>`, `soundiiz_write_<operationId>`) only when a curated tool does not exist. The auto-generated layer does NOT add the confirmation flow.
-- **Destructive writes (DELETE, sync trigger) require a confirmation token** unless `writes.confirmDestructive=false`. The first call returns `confirm_required` with a `confirmId`; the second call (same args + `confirmId`) executes.
+- **Destructive writes (DELETE) require a confirmation token** unless `writes.confirmDestructive=false`. The first call returns `confirm_required` with a `confirmId`; the second call (same args + `confirmId`) executes.
+- **`soundiiz_sync_trigger` is non-destructive** and executes in one call. The sync was already configured by you and runs on a schedule; triggering early just runs it now.
 - Lock the server to GET-only with `writes.allow = false` (or `SOUNDIIZ_MCP_ALLOW_WRITES=false`).
 - Sync write actions can be restricted by `syncs.allowlist`. SmartLink write actions can be restricted by `smartlinks.allowlist`.
 
@@ -33,9 +34,7 @@ soundiiz_sync_get { id: 42 }
 
 ```
 soundiiz_sync_trigger { id: 42 }
-  → returns: { confirm_required, confirmId: "ct_…", recap: "Trigger sync 42 (Workout, spotify→deezer, replace mode)" }
-soundiiz_sync_trigger { id: 42, confirmId: "ct_…" }
-  → returns: { status: "accepted", message: "SYNC_EXECUTION_ACCEPTED" }
+  → returns: { ok: true, status: "accepted", message: "SYNC_EXECUTION_ACCEPTED" }
 ```
 
 ### "Delete the stale draft SmartLink"

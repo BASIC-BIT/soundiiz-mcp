@@ -183,10 +183,9 @@ export function registerCuratedSyncTools(server: McpServer): void {
 function registerSyncWriteTools(server: McpServer): void {
   server.tool(
     'soundiiz_sync_trigger',
-    'Trigger execution of a Soundiiz sync. Returns a confirmId on the first call; re-call with the same args plus that confirmId to execute (skip via writes.confirmDestructive=false).',
+    'Trigger execution of a Soundiiz sync now. The sync was already configured by the user; this just runs it ahead of its schedule. Non-destructive — gated only by writes.allow and the optional syncs.allowlist.',
     {
       id: z.number().int().positive(),
-      confirmId: z.string().optional(),
     },
     async (args) => {
       const config = getConfig();
@@ -196,24 +195,15 @@ function registerSyncWriteTools(server: McpServer): void {
       const allowed = checkSyncAllowed(args.id);
       if (!allowed.ok) return toolError(allowed.reason!);
 
-      if (config.writes.confirmDestructive) {
-        if (!args.confirmId) {
-          const ticket = issueConfirmation('soundiiz_sync_trigger', args);
-          return toolJson({
-            confirm_required: true,
-            recap: `Trigger sync #${args.id} now`,
-            ...ticket,
-            replayInstruction:
-              'Re-call soundiiz_sync_trigger with the same arguments plus this confirmId to execute.',
-          });
-        }
-        const check = consumeConfirmation('soundiiz_sync_trigger', args, args.confirmId);
-        if (!check.ok) return toolError(check.reason!);
-      }
-
       try {
-        const data = await triggerSync(args.id, { internalOverrideWriteGate: true });
-        return toolJson({ ok: true, data });
+        const raw = (await triggerSync(args.id, { internalOverrideWriteGate: true })) as
+          | { data?: { status?: string; message?: string } }
+          | undefined;
+        return toolJson({
+          ok: true,
+          status: raw?.data?.status ?? 'accepted',
+          message: raw?.data?.message ?? null,
+        });
       } catch (err) {
         if (isCallError(err) && err.status === 409) {
           return toolJson({

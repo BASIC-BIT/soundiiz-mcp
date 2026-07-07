@@ -150,7 +150,8 @@ function defaultState(): MockState {
 
 function paginate<T>(items: T[], offset: number, limit: number) {
   const slice = items.slice(offset, offset + limit);
-  return { items: slice, offset, limit, total: items.length };
+  // Real Soundiiz API returns offset/limit as strings; total as number. Match it.
+  return { items: slice, offset: String(offset), limit: String(limit), total: items.length };
 }
 
 function readJsonBody(req: http.IncomingMessage): Promise<unknown> {

@@ -41,15 +41,20 @@ We chose tokens because:
 
 Trade-off: agents need to remember the `confirmId` across two calls. The `confirm_required` response includes the confirmId and a recap of what would happen, so the agent's next turn has everything it needs.
 
-## Why `soundiiz_sync_trigger` is "medium-risk", not "low-risk"
+## Why `soundiiz_sync_trigger` is non-destructive (no confirmation token)
 
-`POST /v1/me/syncs/{id}/trigger` is technically idempotent in the sense that repeated calls while a sync is in flight return `409 SYNC_PROCESSING` rather than queuing duplicates. But:
+`POST /v1/me/syncs/{id}/trigger` runs a sync that the user has already configured and which is already scheduled to run on its own (typically weekly). The cost of an accidental trigger is:
 
-- Triggering a sync mutates remote streaming services (Spotify, Deezer, etc.) by adding/replacing tracks in destination playlists.
-- The user might want to inspect the sync's current state before re-running.
-- Cost to the user of an accidental trigger is low (replace mode might churn track order) but not zero.
+- Repeated calls while a sync is in flight return `409 SYNC_PROCESSING` instead of queuing duplicates — idempotent in practice.
+- The sync's effect on remote playlists is whatever the user asked for; it's just running earlier than the schedule.
+- The only real downside is that Soundiiz runs one sync at a time per account, so an unexpected trigger can occupy that slot for up to an hour.
 
-Default = confirmation token required. Operators with high trust can flip `writes.confirmDestructive=false`.
+That's a UX cost, not data loss. Treating it with the same gravity as a DELETE (confirmation token + replay) felt heavy-handed in practice, so triggers execute in one call. Operators who want to lock the trigger down can still:
+
+- Set `writes.allow=false` to disable all writes, or
+- Set `syncs.allowlist` to restrict which sync IDs can be triggered.
+
+Deletes (`soundiiz_sync_delete`, `soundiiz_smartlink_delete`) still go through the confirmation flow because they actually destroy state.
 
 ## Cache TTLs
 

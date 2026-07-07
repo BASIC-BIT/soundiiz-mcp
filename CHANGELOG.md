@@ -20,7 +20,8 @@ Initial release.
   - Local: `soundiiz_cache_invalidate`.
 - Auto-generated `soundiiz_read_<operationId>` and `soundiiz_write_<operationId>` tools from every operation in the spec.
 - Opt-in raw layer: `soundiiz_call`, `soundiiz_list_operations` (enable with `rawTools.enabled=true`).
-- Confirmation-token flow on `soundiiz_sync_trigger`, `soundiiz_sync_delete`, `soundiiz_smartlink_delete` — the first call returns a `confirmId`; the second call (same args + `confirmId`) executes. Tokens are bound to tool name + arg hash and expire after `writes.confirmTtlMs` (120s default).
+- Confirmation-token flow on destructive writes (`soundiiz_sync_delete`, `soundiiz_smartlink_delete`) — the first call returns a `confirmId`; the second call (same args + `confirmId`) executes. Tokens are bound to tool name + arg hash and expire after `writes.confirmTtlMs` (120s default).
+- `soundiiz_sync_trigger` is treated as a non-destructive write and executes in one call. Rationale: the sync was already configured by the user and runs on a schedule; triggering early just runs it now. Coerce-fix to `paginated` mode of `*_list`: `offset`/`limit` are now returned as numbers (Soundiiz upstream returns them as strings).
 - Per-resource allowlists: `syncs.allowlist`, `smartlinks.allowlist`.
 - Token-bucket rate limiter (60 req/min default, configurable).
 - TTL cache with explicit invalidation per scope (`me`, `syncsList`, `syncDetail`, `smartlinksList`, `smartlinkDetail`).
